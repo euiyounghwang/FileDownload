@@ -1,13 +1,17 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.openapi.utils import get_openapi
 from starlette.middleware.cors import CORSMiddleware
 # from controller import db_controller
 from config.log_config import create_log
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
+import shutil
+
 import os
 
 # directory = 'c/Users/euiyoung.hwang/Git_Workspace/FileDownload'
 directory = r'C://Users/euiyoung.hwang/Git_Workspace/FileDownload'
+
+os.makedirs("uploads", exist_ok=True)
 
 logger = create_log()
 app = FastAPI(
@@ -61,6 +65,38 @@ async def root():
     return {"message": "This API allow us to download any files"}
 
 
+@app.get("/ui", response_class=HTMLResponse)
+async def get_upload_form():
+    return """
+    <html>
+        <head>
+            <title>FileDownload Service - Upload File</title>
+        </head>
+        <body>
+            <h1>The ES Team Service - Upload File with Extra Fields</h1>
+            <form action="/uploadfile/" method="post" enctype="multipart/form-data">
+                <input type="file" name="file"><br>
+                <input type="text" name="item_id" placeholder="Item ID"><br>
+                <input type="text" name="description" placeholder="Description"><br>
+                <input type="submit" value="Upload">
+            </form>
+        </body>
+    </html>
+    """
+
+
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...), item_id: str = Form(...), description: str = Form(...)):
+    file_location = f"uploads/{file.filename}"
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return {
+        "info": f"file '{file.filename}' saved at '{file_location}'",
+        "item_id": item_id,
+        "description": description
+    }
+
 
 @app.get("/filelist")
 async def get_download_file_list():
@@ -70,7 +106,6 @@ async def get_download_file_list():
     ''' return fil list as type of list'''
     return dir_list
     
-
 
 @app.get("/download/{filename}")
 async def download_file(filename: str):
