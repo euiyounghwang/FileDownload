@@ -2,7 +2,7 @@
 <i> FileDownload
 
 FastAPI is a modern, fast (high-performance), web framework for building APIs with Python 3.8+ based on standard Python.
-This is a repository that provides to deliver the records to the Prometheus-Export application.
+This is a repository that provides to upload file via user interface(`http://localhost:7091/ui`) and download them using the endpoint(`http://localhost:7091/filelist`,`http://localhost:7091/download/<file>`).
 
 
 ### Install Poerty
@@ -41,7 +41,7 @@ or you can run this shell script `./create_virtual_env.sh` to make an environmen
 ### Register Service
 - sudo service filedownload_es_api status/stop/start/restart
 ```bash
-#-- /etc/systemd/system/filedownload_es_api.service
+#-- sudo vi /etc/systemd/system/filedownload_es_api.service
 [Unit]
 Description=FileDownload ES Service
 

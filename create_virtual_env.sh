@@ -9,7 +9,8 @@ VENV=".venv"
 
 function activate_virtual_env() {
     # Create virtualenv
-    python -m venv $SCRIPTDIR/$VENV
+    python3.9 -m venv $SCRIPTDIR/$VENV
+    python3.9 -m pip install --upgrade pip
     
      # Python 3.11.7 with Window
     if [ -d "$VENV/bin" ]; then
