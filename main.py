@@ -107,7 +107,7 @@ async def get_upload_form():
                     font-size: 18px; line-height: 2em;
                 }
             </style>
-            <link rel="shortcut icon" href="http://%s:7091/download/favicon.ico" type="image/x-icon">
+            <link rel="shortcut icon" href="http://%s:7091/static/image/favicon.ico" type="image/x-icon">
 
         </head>
         <body>
