@@ -111,7 +111,7 @@ async def get_upload_form():
 
         </head>
         <body>
-            <h1>The ES Team Service - Download ca certification file for the upgraded of Elasticsearch 8.17.0 with search guard as x-pack</h1>
+            <h1>The ES Team Service - Download CA certification file for the upgraded Elasticsearch v.8.17.0 with search guard as x-pack</h1>
             <p>A CA certificate is a digital certificate issued by a certificate authority (CA), so SSL clients (such as web browsers) can use it to verify the SSL certificates sign by this CA.</p>
             <ul>
             <li><b>DEV Environment</b></li>
