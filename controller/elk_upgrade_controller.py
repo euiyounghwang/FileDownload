@@ -33,30 +33,33 @@ app = APIRouter(
             200: {"description" : "OK"},
             404 :{"description" : "URl not found"}
           },
-          description="Sample Payload : http://localhost:8001/cluster/health?es_url=http://localhost:9200", 
+          description="Sample Payload : http://localhost:8001/elk/user_password_bcrypt?plain_text_password=test", 
           summary="Cluster Info")
 async def get_es_health(plain_text_password="test"):
     ''' encrypt'''
-    '''
-    # Generating Salt
-    salt = bcrypt.gensalt(10)
+    try:
+        '''
+        # Generating Salt
+        salt = bcrypt.gensalt(10)
 
-    # Hashing Password
-    hash_password = bcrypt.hashpw(
-        password=plain_text_password,
-        salt=salt
-    )
-    
-    print(f"Actual Password: {plain_text_password.decode('utf-8')}")
-    # Print Hashed Password
-    print(f"Hashed Password: {hash_password.decode('utf-8')}")
+        # Hashing Password
+        hash_password = bcrypt.hashpw(
+            password=plain_text_password,
+            salt=salt
+        )
+        
+        print(f"Actual Password: {plain_text_password.decode('utf-8')}")
+        # Print Hashed Password
+        print(f"Hashed Password: {hash_password.decode('utf-8')}")
 
-    return hash_password
-    '''
-    return {
-        "Actual_Password" : plain_text_password,
-        "Hashed_Password" : pwd_context.hash(plain_text_password)
-    }
+        return hash_password
+        '''
+        return {
+            "Actual_Password" : plain_text_password,
+            "Hashed_Password" : pwd_context.hash(plain_text_password)
+        }
+    except Exception as e:
+        return JSONResponse(status_code=404, content={"message": str(e)})
 
 
 @app.get("/ui", response_class=HTMLResponse)
