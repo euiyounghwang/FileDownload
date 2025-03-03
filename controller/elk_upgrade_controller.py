@@ -115,6 +115,119 @@ async def get_upload_form():
     """ % (host, host)
 
 
+
+@app.get("/on_call", response_class=HTMLResponse)
+async def get_upload_form():
+    return """
+    <html>
+        <head>
+            <title>On_Call - Stop/Start the middleware ES/Kafka/Spark Services</title>
+            <style type='text/css'>
+                p { font-size: 19px;}
+                li {
+                    font-size: 18px; line-height: 2em;
+                }
+            </style>
+            <link rel="shortcut icon" href="http://%s:7091/static/image/favicon.ico" type="image/x-icon">
+        </head>
+        <body>
+            <h1>Stop/Start the middleware ES/Kafka/Spark Services</h1>
+            <p><b>Stop Services</b></p>
+            <ul>
+                <li><b>Stop Spark custom job</b></li>
+                <ol>
+                    <li>http://localhost:8080/ (kill click for jobs)</li>
+                </ol>
+                <li><b>Stop Spark Cluster.</b></li>
+                <ol>
+                    <li>sudo su -l %s</li>
+                    <li><b><mark>[%s] /apps/spark/latest/sbin/stop-all.sh</mark></b></li>
+                    <li>[others] /apps/spark-2.2.0-bin-hadoop2.7/sbin/stop-all.sh</li>
+                </ol>
+                <li><b>Pause OM/WM listeners.</b></li>
+                <li><b>Stop Kafka Connect – all 3 nodes.</b></li>
+                <ol>
+                    <li>sudo utils/connectUtil.sh status</li>
+                    <li>sudo utils/connectUtil.sh stop</li>
+                    <li>sudo netstat -nlp | grep :8083</li>
+                    <li>curl -XGET 'localhost:8083/connectors' | jq</li>
+                    <li>curl -XGET 'localhost:8083/connectors/epq_wmxd_jdbc/status' | jq</li>
+                    <li>curl -XGET 'localhost:8083/connectors/epq_omxd_jdbc/status' | jq</li>
+                </ol>
+                <li><b>Stop Kafka/ZooKeeper – all 3 nodes.</b></li>
+                <ol>
+                    <li>sudo utils/kafkaUtil.sh status</li>
+                    <li>sudo utils/kafkaUtil.sh stop</li>
+                </ol>
+                <li><b>Stop ElasticSearch – all 3 nodes.</b></li>
+                <ol>
+                    <li>sudo service elasticsearch stop</li>
+                    <li>ps -ef | grep elastic</li>
+                </ol>
+                <li><b>Stop Logstash</b></li>
+                <ol>
+                    <li>sudo service logstash stop</li>
+                </ol>
+                <li><b>Stop Kibana : Get the pid for port 5601 using ‘netstat’ command and kill the process.</b></li>
+                <ol>
+                    <li>ps -ef | grep kibana</li>
+                    <li>sudo kill -9 [process_id]</li>
+                    <li>sudo netstat -nlp | grep :5601</li>
+                </ol>
+	    	</ul>
+            </br></br>
+            <p><b>Start Services</b></p>
+            <ul>
+                <li><b>Start ElasticSearch – all 3 nodes.</b></li>
+                <ol>
+                    <li>sudo service elasticsearch start</li>
+                    <li>ps -ef | grep elastic</li>
+                    <li>curl http://localhost:9200</li>
+                </ol>
+                <li><b>Start Logstash</b></li>
+                <ol>
+                    <li>sudo service logstash start</li>
+                </ol>
+                <li><b>Start Kibana</b></li>
+                <ol>
+                    <li>sudo /apps/kibana/latest/bin/kibana &</li>
+                    <li>ps -ef | grep kibana</li>
+                    <li>curl http://localhost:5601</li>
+                    <li>sudo netstat -nlp | grep :5601</li>
+                </ol>
+                <li><b>Start Kafka/ZooKeeper – all 3 nodes.</b></li>
+                <ol>
+                    <li>sudo utils/kafkaUtil.sh start</li>
+                </ol>
+                <li><b>Start Kafka Connect – all 3 nodes.</b></li>
+                <ol>
+                    <li>sudo utils/connectUtil.sh status</li>
+                    <li>sudo utils/connectUtil.sh start</li>
+                    <li>sudo netstat -nlp | grep :8083</li>
+                    <li>curl -XGET 'localhost:8083/connectors' | jq</li>
+                    <li>curl -XGET 'localhost:8083/connectors/epq_wmxd_jdbc/status' | jq</li>
+                    <li>curl -XGET 'localhost:8083/connectors/epq_omxd_jdbc/status' | jq</li>
+                </ol>
+                <li><b>Resume/Restart OM/WM listeners.</b></li>
+                <li><b>Start Spark Cluster.</b></li>
+                <ol>
+                    <li>sudo su -l %s</li>
+                    <li><b><mark>[%s] /apps/spark/latest/sbin/start-all.sh</mark></b></li>
+                    <li>[others] /apps/spark-2.2.0-bin-hadoop2.7/sbin/start-all.sh</li>
+                </ol>
+                <li><b>Start Spark custom job</b></li>
+                <ol>
+                    <li>sudo su -l %s</li>
+                    <li><b><mark>[%s] ./utils/sparkSubmitWMx.sh start, ./utils/sparkSubmitOMx.sh start</li></b>
+                    <li>[others] ./utils/sparkSubmit.sh start</li>
+                    <li>http://[target_primary_data_node_host]:8080/</li>
+                </ol>
+	    	</ul>
+        </body>
+    </html>
+    """ % (host, os.getenv("SPARK_USER"), os.getenv("SPARK_UPGRADE"), os.getenv("SPARK_USER"), os.getenv("SPARK_UPGRADE"), os.getenv("SPARK_USER"), os.getenv("SPARK_CUSTOM_APPS"))
+
+
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile = File(...), item_id: str = Form(...), description: str = Form(...)):
     try:
