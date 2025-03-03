@@ -3,7 +3,6 @@ from fastapi import FastAPI, UploadFile, File, Form, APIRouter
 from fastapi.openapi.utils import get_openapi
 from starlette.middleware.cors import CORSMiddleware
 # from controller import db_controller
-from config.log_config import create_log
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 import shutil
 from fastapi.staticfiles import StaticFiles
@@ -35,9 +34,10 @@ app = APIRouter(
           },
           description="Sample Payload : http://localhost:8001/elk/user_password_bcrypt?plain_text_password=test", 
           summary="Cluster Info")
-async def get_es_health(plain_text_password="test"):
+async def user_password_bcrypt(plain_text_password="test"):
     ''' encrypt'''
     try:
+        logger.info(f"user_password_bcrypt called : {plain_text_password}")
         '''
         # Generating Salt
         salt = bcrypt.gensalt(10)
@@ -119,7 +119,7 @@ async def get_upload_form():
 async def create_upload_file(file: UploadFile = File(...), item_id: str = Form(...), description: str = Form(...)):
     try:
         file_location = f"{directory}/uploads/{file.filename}"
-        print(f"file_location : {file_location}")
+        logger.info(f"file_location : {file_location}")
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
@@ -129,7 +129,7 @@ async def create_upload_file(file: UploadFile = File(...), item_id: str = Form(.
             "description": description
         }
     except Exception as e:
-        print(e)
+        logger.error(e)
 
 
 @app.get("/filelist",
@@ -164,7 +164,7 @@ async def download_file(filename: str):
         # current_directory = os.getcwd()
         current_directory = directory
         file_path = os.path.join(current_directory, "uploads", filename)
-        print(f"file path : {file_path}")
+        logger.info(f"file path : {file_path}")
         if not os.path.exists("{}".format(file_path)):
             return JSONResponse(status_code=404, content={"message": f"{filename} is not found"})
         return FileResponse(path=file_path, filename=filename)
