@@ -84,7 +84,42 @@ async def get_upload_form():
 
 
 
-@app.get("/ca_file", response_class=HTMLResponse)
+@app.get("/xpack_admin", response_class=HTMLResponse)
+async def get_upload_form():
+    return """
+    <html>
+        <head>
+            <title>FileDownload Service - Upload File</title>
+            <style type='text/css'>
+                p { font-size: 19px;}
+                li {
+                    font-size: 18px; line-height: 2em;
+                }
+            </style>
+            <link rel="shortcut icon" href="http://%s:7091/static/image/favicon.ico" type="image/x-icon">
+
+        </head>
+        <body>
+            <h1>The ES Team Service - Download CA certification file for the upgraded Elasticsearch v.8.17.0 with search guard as x-pack</h1>
+            <p>Root CA (Certificate Authority) is a certificate that will be used to sign all other certificates within a system. In other words, Root CA is an issuer of node, client and admin certificates.
+             A CA certificate is a digital certificate issued by a certificate authority (CA), so SSL clients (such as web browsers) can use it to verify the SSL certificates sign by this CA.
+            <BR/><BR/>
+            The csr mode generates certificate signing requests (CSRs) that You can send to a trusted certificate authority to obtain signed certificates. The signed certificates must be in PEM format to work with Elasticsearch security features.
+            </p>
+            <ul>
+            <li><b>DEV Environment</b></li>
+			<li><b>QA Environment</b></li>
+            <ol>
+				<li><a href="http://%s:7091/elk/download/qa13-es8-ca.pem">QA-13 CA certificate</a></li>
+			</ol>
+            <li><b>PROD Environment</b></li>
+	    	</ul>
+        </body>
+    </html>
+    """ % (host, host)
+
+
+@app.get("/xpack", response_class=HTMLResponse)
 async def get_upload_form():
     return """
     <html>
@@ -113,7 +148,6 @@ async def get_upload_form():
         </body>
     </html>
     """ % (host, host)
-
 
 
 @app.get("/on_call", response_class=HTMLResponse)
