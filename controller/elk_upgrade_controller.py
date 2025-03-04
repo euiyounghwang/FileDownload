@@ -102,7 +102,8 @@ async def get_upload_form():
         <body>
             <h1>The ES Team Service - Download CA certification file for the upgraded Elasticsearch v.8.17.0 with search guard as x-pack</h1>
             <p>Root CA (Certificate Authority) is a certificate that will be used to sign all other certificates within a system. In other words, Root CA is an issuer of node, client and admin certificates.
-             A CA certificate is a digital certificate issued by a certificate authority (CA), so SSL clients (such as web browsers) can use it to verify the SSL certificates sign by this CA.
+            A CA certificate is a digital certificate issued by a certificate authority (CA), so SSL clients (such as web browsers) can use it to verify the SSL certificates sign by this CA.
+            We need to pass the path to the CA root certificate which was used to sign the server certificate offered by that Elasticsearch node. This way, the client will be able to trust the server connection.
             <BR/><BR/>
             The csr mode generates certificate signing requests (CSRs) that You can send to a trusted certificate authority to obtain signed certificates. The signed certificates must be in PEM format to work with Elasticsearch security features.
             </p>
