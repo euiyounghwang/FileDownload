@@ -104,9 +104,13 @@ async def get_upload_form():
             <p>Root CA (Certificate Authority) is a certificate that will be used to sign all other certificates within a system. In other words, Root CA is an issuer of node, client and admin certificates.
             A CA certificate is a digital certificate issued by a certificate authority (CA), so SSL clients (such as web browsers) can use it to verify the SSL certificates sign by this CA.
             We need to pass the path to the CA root certificate which was used to sign the server certificate offered by that Elasticsearch node. This way, the client will be able to trust the server connection.
+            </p>
             <BR/><BR/>
+            <p>
             The csr mode generates certificate signing requests (CSRs) that You can send to a trusted certificate authority to obtain signed certificates. The signed certificates must be in PEM format to work with Elasticsearch security features.
             </p>
+            <BR />
+            <img src='http://%s:7091/static/image/csr_command.PNG' width="800" height="320" />
             <ul>
             <li><b>DEV Environment</b></li>
 			<li><b>QA Environment</b></li>
@@ -117,7 +121,7 @@ async def get_upload_form():
 	    	</ul>
         </body>
     </html>
-    """ % (host, host)
+    """ % (host, host, host)
 
 
 @app.get("/xpack", response_class=HTMLResponse)
