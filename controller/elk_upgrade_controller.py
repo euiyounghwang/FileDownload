@@ -105,23 +105,38 @@ async def get_upload_form():
             A CA certificate is a digital certificate issued by a certificate authority (CA), so SSL clients (such as web browsers) can use it to verify the SSL certificates sign by this CA.
             We need to pass the path to the CA root certificate which was used to sign the server certificate offered by that Elasticsearch node. This way, the client will be able to trust the server connection.
             </p>
-            <BR/><BR/>
             <p>
             The csr mode generates certificate signing requests (CSRs) that You can send to a trusted certificate authority to obtain signed certificates. The signed certificates must be in PEM format to work with Elasticsearch security features.
             </p>
             <BR />
-            <img src='http://%s:7091/static/image/csr_command.PNG' width="800" height="320" />
-            <ul>
-            <li><b>DEV Environment</b></li>
-			<li><b>QA Environment</b></li>
+            <!--<img src='http://%s:7091/static/image/csr_command.PNG' width="800" height="320" />-->
+            <li><b>How to Get CA Signed Certificate from CSR File</b> (<a href='https://tutorialspedia.com/csr-certificate-signing-request-how-to-get-ca-signed-certificate-from-csr-file/'>LINK</a>, <a href='https://cornswrold.tistory.com/435'>LINK#2</a>, <a href='https://velog.io/@gweowe/OpenSSL-자체-인증서SELF-SIGNED-CERTIFICATE-만들기-MacOS'>LINK#3</a>)</li>
             <ol>
-				<li><a href="http://%s:7091/elk/download/qa13-es8-ca.pem">QA-13 CA certificate</a></li>
+				<li> In order to get a CA signed certificate for a domain, you first need to generate a CSR (Certificate Signing Request) and then follow additional steps to get it certified/signed by a Certificate Authority (CA) to make it a valid CA Signed Digital SSL Certificate</li>
 			</ol>
-            <li><b>PROD Environment</b></li>
-	    	</ul>
+            <li><b>Steps to Get a CA Signed Certificate from CSR File : to obtain a certificate from the CA (Certificate Authority), you must generate a CSR (Certificate Signing Request)</b></li>
+            <ol>
+				<li>Generate CSR Certificate Signing Request File (.csr) :  if you want to generate CSR File using OpenSSL, first run the below command to create a key file:</li>
+                <li><b>openssl genrsa -out demo.com.key 2048</b></li>
+                <li>The above command will generate a key file demo.com.key which we will use in the below command to generate CSR File demo.csr</li>
+                <li><b>openssl req -new -key demo.com.key -out demo.csr</b></li>
+                <li>Once you will run the above command for generating certificate signing request (CSR), you will be promoted to enter additional details including country, state, city, organization, organization unit, CN (common name), email etc.</li>
+			</ol>
+            <li><b>Submit CSR Certificate Signing Request File to CA to get Signed SSL Certificate</b></li>
+            <ol>
+				<li>Once you have created a CSR File using step 1, next you need to submit the CSR to a CA</li>
+                <li><b>The CA will then validate the information in the CSR, and if everything is in order, they will issue a signed certificate</b></li>
+                <li>When submitting the CSR to the CA, you will typically be prompted to provide additional information such as your organization’s contact details and the domain name(s) that the certificate will be used for. The CA will use this information to validate your organization and ensure that you are authorized to request a certificate for the domain in question.</li>
+			</ol>
+            <li><b>Install CA Signed SSL Certificate on Server</b></li>
+            <ol>
+				<li>Once you have received the signed certificate, you will need to install it on the server along with the private key that was generated when the CSR was created</li>
+                <li><b>After the certificate is installed, it can be used for SSL Based secure communications such as HTTPS.</b></li>
+			</ol>
+            </ul>
         </body>
     </html>
-    """ % (host, host, host)
+    """ % (host, host)
 
 
 @app.get("/xpack", response_class=HTMLResponse)
