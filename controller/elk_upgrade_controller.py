@@ -125,6 +125,7 @@ async def get_upload_form():
             <li><b>Submit CSR Certificate Signing Request File to CA to get Signed SSL Certificate</b></li>
             <ol>
 				<li>Once you have created a CSR File using step 1, next you need to submit the CSR to a CA</li>
+                <li>Create Self Signed Certifcate : `openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt` or `openssl x509 -req -days 365 -extensions v3_ca -set_serial -in ca.csr -signkey ca.key -out ca.crt -extfile csr_file.conf`</li>
                 <li><b>The CA will then validate the information in the CSR, and if everything is in order, they will issue a signed certificate</b></li>
                 <li>When submitting the CSR to the CA, you will typically be prompted to provide additional information such as your organization’s contact details and the domain name(s) that the certificate will be used for. The CA will use this information to validate your organization and ensure that you are authorized to request a certificate for the domain in question.</li>
 			</ol>
