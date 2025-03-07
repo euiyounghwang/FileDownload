@@ -94,7 +94,7 @@ async def get_upload_form():
     return """
     <html>
         <head>
-            <title>FileDownload Service - ELk Upgrade Documentation File</title>
+            <title>ELk Upgrade Docs</title>
             <style type='text/css'>
                 p { font-size: 19px;}
                 li {
@@ -111,7 +111,15 @@ async def get_upload_form():
 				<li><a href="http://%s:7091/elk/document/ELK_Upgrade_ES_V8_Monitoring_Setup.docx">Setup ELK_Upgrade Docs</a></li>
                 <li><a href="http://%s:7091/elk/document/ELK_Upgrade_Kibana_Query">Setup Kibana Query Docs</a></li>
 			</ol>
-            </ul>
+            <li><b>Search-Guard as x-pack url</b></li>
+            <ol>
+				<li><a href="https://docs.search-guard.com/latest/search-guard-versions">Search Guard FLx Version</a></li>
+                <li><a href="https://subin-0320.tistory.com/174">Generate certs for the ssl certification (Korean)</a></li>
+			</ol>
+            <li><b>Util</b></li>
+            <ol>
+				<li><a href="https://bcrypt-generator.com/#google_vignette">Bcrypt Hash Generator</a></li>
+			</ol>
         </body>
     </html>
     """ % (host, host, host)
