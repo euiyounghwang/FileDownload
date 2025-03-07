@@ -151,7 +151,7 @@ async def get_upload_form():
             </p>
             <BR />
             <!--<img src='http://%s:7091/static/image/csr_command.PNG' width="800" height="320" />-->
-            <li><b>How to Get CA Signed Certificate from CSR File</b> (<a href='https://tutorialspedia.com/csr-certificate-signing-request-how-to-get-ca-signed-certificate-from-csr-file/'>LINK</a>, <a href='https://cornswrold.tistory.com/435'>LINK#2</a>, <a href='https://velog.io/@gweowe/OpenSSL-자체-인증서SELF-SIGNED-CERTIFICATE-만들기-MacOS'>LINK#3</a>)</li>
+            <li><b>How to Get CA Signed Certificate from CSR File</b> (<a href='https://tutorialspedia.com/csr-certificate-signing-request-how-to-get-ca-signed-certificate-from-csr-file/'>LINK</a>, <a href='https://cornswrold.tistory.com/435'>LINK#2</a>, <a href='https://velog.io/@gweowe/OpenSSL-자체-인증서SELF-SIGNED-CERTIFICATE-만들기-MacOS'>LINK#3</a>, <a href='https://a-gyuuuu.tistory.com/356'>LINK#4</a>)</li>
             <ol>
 				<li> In order to get a CA signed certificate for a domain, you first need to generate a CSR (Certificate Signing Request) and then follow additional steps to get it certified/signed by a Certificate Authority (CA) to make it a valid CA Signed Digital SSL Certificate</li>
 			</ol>
