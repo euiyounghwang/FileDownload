@@ -20,6 +20,11 @@ host = os.getenv("HOST")
 # directory = r'C://Users/euiyoung.hwang/Git_Workspace/FileDownload'
 directory = os.getenv("FILE_DIR")
 
+if not os.path.isdir(directory + "/docs"):                                                           
+    os.mkdir(directory + "/docs")
+
+if not os.path.isdir(directory + "/uploads"):                                                           
+    os.mkdir(directory + "/uploads")
 
 app = APIRouter(
     prefix="/elk",
@@ -82,6 +87,34 @@ async def get_upload_form():
     </html>
     """ % (host)
 
+
+
+@app.get("/docs", response_class=HTMLResponse)
+async def get_upload_form():
+    return """
+    <html>
+        <head>
+            <title>FileDownload Service - ELk Upgrade Documentation File</title>
+            <style type='text/css'>
+                p { font-size: 19px;}
+                li {
+                    font-size: 18px; line-height: 2em;
+                }
+            </style>
+            <link rel="shortcut icon" href="http://%s:7091/static/image/favicon.ico" type="image/x-icon">
+
+        </head>
+        <body>
+            <h1>The ES Team Service - Download documentation files for upgrading Elasticsearch v.8.17.0 with search guard as x-pack/Logstash/Kibana</h1>
+            <li><b>Download documentation files for upgrading ELK Stack</b></li>
+            <ol>
+				<li><a href="http://%s:7091/elk/document/ELK_Upgrade_ES_V8_Monitoring_Setup.docx">Setup ELK_Upgrade Docs</a></li>
+                <li><a href="http://%s:7091/elk/document/ELK_Upgrade_Kibana_Query">Setup Kibana Query Docs</a></li>
+			</ol>
+            </ul>
+        </body>
+    </html>
+    """ % (host, host, host)
 
 
 @app.get("/xpack_admin", response_class=HTMLResponse)
@@ -332,6 +365,28 @@ async def download_file(filename: str):
         # current_directory = os.getcwd()
         current_directory = directory
         file_path = os.path.join(current_directory, "uploads", filename)
+        logger.info(f"file path : {file_path}")
+        if not os.path.exists("{}".format(file_path)):
+            return JSONResponse(status_code=404, content={"message": f"{filename} is not found"})
+        return FileResponse(path=file_path, filename=filename)
+    except Exception as e:
+        return JSONResponse(status_code=404, content={"message": str(e)})
+    
+
+@app.get("/document/{filename}",
+          status_code=200,
+          responses={
+            200: {"description" : "OK"},
+            404 :{"description" : "URl not found"}
+          },
+          description="Sample Payload : http://localhost:7091/document/<file_name>", 
+          summary="* Return file"
+         )
+async def download_file(filename: str):
+    try:
+        # current_directory = os.getcwd()
+        current_directory = directory
+        file_path = os.path.join(current_directory, "docs", filename)
         logger.info(f"file path : {file_path}")
         if not os.path.exists("{}".format(file_path)):
             return JSONResponse(status_code=404, content={"message": f"{filename} is not found"})
