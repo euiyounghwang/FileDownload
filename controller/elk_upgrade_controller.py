@@ -11,6 +11,8 @@ import shutil
 import os
 from injector import logger
 import bcrypt
+import random
+import string
 from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -30,6 +32,32 @@ app = APIRouter(
     prefix="/elk",
 )
 
+
+@app.get("/generate_sg_password", 
+          status_code=200,
+          responses={
+            200: {"description" : "OK"},
+            404 :{"description" : "URl not found"}
+          },
+          description="Sample Payload : http://localhost:8001/elk/generate_sg_password?plain_text_password=test", 
+          summary="Cluster Info")
+async def generate_sg_password():
+    ''' encrypt'''
+    try:
+        logger.info(f"generate_sg_password called")
+        
+        # length = random.randint(8, 16)
+        length = 12
+        # characters = string.ascii_letters + string.digits + string.punctuation
+        characters = string.ascii_letters + string.digits + '@'
+        password = ''.join(random.choice(characters) for i in range(length))
+     
+        return {
+            "generated_Password" : password
+        }
+    except Exception as e:
+        return JSONResponse(status_code=404, content={"message": str(e)})
+    
 
 @app.get("/user_password_bcrypt", 
           status_code=200,
