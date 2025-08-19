@@ -61,7 +61,7 @@ async def generate_sg_password():
         # characters = string.ascii_uppercase + string.ascii_lowercase + string.digits + '@'
         password = ''.join(random.choice(characters) for i in range(length))
         """
-        symbols = ['*', '%', '@', '#', '!', '$'] # Can add more
+        symbols = ['*', '%', '@', '#', '!', '$', '^'] # Can add more
 
         ''' subtract for ascii_uppercase, digits and symbols'''
         length -= 3
