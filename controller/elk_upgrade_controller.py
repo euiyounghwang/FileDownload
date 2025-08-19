@@ -65,18 +65,31 @@ async def generate_sg_password():
 
         ''' subtract for ascii_uppercase, digits and symbols'''
         length -= 3
-        password = ""
-        for _ in range(length):
-            password += secrets.choice(string.ascii_lowercase)
-        password += secrets.choice(string.ascii_uppercase)
-        password += secrets.choice(string.digits)
-        password += secrets.choice(symbols)
-        print(password)
+        # password = ""
+        password_list = []
+        for _ in range(int(length/2)):
+            # password += secrets.choice(string.ascii_lowercase)
+            password_list.append(secrets.choice(string.ascii_lowercase))
+
+        for _ in range(int(length/2), length):
+            password_list.append(secrets.choice(string.ascii_uppercase))
+
+        # password += secrets.choice(string.ascii_uppercase)
+        # password += secrets.choice(string.digits)
+        # password += secrets.choice(symbols)
+
+        password_list.append(secrets.choice(string.ascii_uppercase))
+        password_list.append(secrets.choice(string.digits))
+        password_list.append(secrets.choice(symbols))
+
+        random.shuffle(password_list)
+        # print("".join(rand_shuffle_password))
+        print(password_list)
      
         return {
-            "generated_Password_len" : len(password),
-            "generated_Password" : password,
-            "bcrypted_Hash_generated_Password" : pwd_context.hash(password)
+            "generated_Password_len" : len("".join(password_list)),
+            "generated_Password" : "".join(password_list),
+            "bcrypted_Hash_generated_Password" : pwd_context.hash("".join(password_list))
         }
     
     except Exception as e:
