@@ -13,7 +13,13 @@ from injector import logger
 import bcrypt
 import random
 import string
+import secrets
 from passlib.context import CryptContext
+
+'''
+In Python, cryptographic hashing is primarily handled by the hashlib module for general-purpose hashing and 
+the crypt module (though deprecated) or external libraries like bcrypt and passlib for password hashing.
+'''
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -48,13 +54,31 @@ async def generate_sg_password():
         
         # length = random.randint(8, 16)
         length = 12
+        """
         # characters = string.ascii_letters + string.digits + string.punctuation
-        characters = string.ascii_letters + string.digits + '@'
+        # characters = string.ascii_letters + string.digits + '@'
+        characters = string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation
+        # characters = string.ascii_uppercase + string.ascii_lowercase + string.digits + '@'
         password = ''.join(random.choice(characters) for i in range(length))
+        """
+        symbols = ['*', '%', '@', '#', '!', '$'] # Can add more
+
+        ''' subtract for ascii_uppercase, digits and symbols'''
+        length -= 3
+        password = ""
+        for _ in range(length):
+            password += secrets.choice(string.ascii_lowercase)
+        password += secrets.choice(string.ascii_uppercase)
+        password += secrets.choice(string.digits)
+        password += secrets.choice(symbols)
+        print(password)
      
         return {
-            "generated_Password" : password
+            "generated_Password_len" : len(password),
+            "generated_Password" : password,
+            "bcrypted_Hash_generated_Password" : pwd_context.hash(password)
         }
+    
     except Exception as e:
         return JSONResponse(status_code=404, content={"message": str(e)})
     
@@ -231,13 +255,13 @@ async def get_upload_form():
             <li><b>DEV Environment</b></li>
 			<li><b>QA Environment</b></li>
             <ol>
-				<li><a href="http://%s:7091/elk/download/qa13-es8-ca.pem">QA-13 CA certificate</a></li>
+				<li><a href="http://%s:7091/elk/download/qa13-es8-ca.pem">QA-13 CA certificate (PEM format)</a>, <a href="http://%s:7091/elk/download/qa13-es-certs.jks">QA-13 CA certificate (jks format)</a>, <a href="http://%s:7091/elk/download/qa13-es-certs.p12">QA-13 CA certificate (p12 format)</a></li>
 			</ol>
             <li><b>PROD Environment</b></li>
 	    	</ul>
         </body>
     </html>
-    """ % (host, host)
+    """ % (host, host, host, host)
 
 
 @app.get("/on_call", response_class=HTMLResponse)
